@@ -1,0 +1,6 @@
+*.swo
+*.swp
+/node_modules
+npm-debug.log
+/initrd
+/test/initrd

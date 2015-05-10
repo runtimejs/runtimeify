@@ -1,0 +1,38 @@
+{
+  "name": "runtimeify",
+  "version": "0.1.0",
+  "description": "Wrapper around browserify that bundles for runtime.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/test.js"
+  },
+  "bin": {
+    "runtimeify": "runtimeify.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:runtimejs/runtimeify.git"
+  },
+  "author": "runtime.js project authors",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/runtimejs/runtimeify/issues"
+  },
+  "homepage": "http://runtimejs.org",
+  "devDependencies": {
+    "tape": "^4.0.0"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "browserify": "^10.0.0",
+    "buffer-crc32": "^0.2.5",
+    "colors": "^1.1.0",
+    "combined-stream": "0.0.7",
+    "minimist": "^1.1.1",
+    "request": "^2.55.0",
+    "shelljs": "^0.4.0",
+    "stream-to-buffer": "^0.1.0",
+    "streamifier": "^0.1.1",
+    "through2": "^0.6.5"
+  }
+}
