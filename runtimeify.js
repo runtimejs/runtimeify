@@ -32,7 +32,7 @@ if (arglist.length === 0) {
 
 var output = argv.o || 'initrd';
 var file = path.resolve(arglist[arglist.length - 1]);
-var b = browserify(['runtimejs', file]);
+var b = browserify(file);
 
 // TODO: include files separately
 // var rows = [];
