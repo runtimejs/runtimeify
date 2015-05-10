@@ -18,6 +18,7 @@ var streamifier = require('streamifier');
 var crc32 = require('buffer-crc32');
 var streamToBuffer = require('stream-to-buffer');
 var async = require('async');
+var nullByte = new Buffer([0]);
 
 module.exports = function(out, files) {
   var combinedStream = CombinedStream.create();
@@ -45,7 +46,7 @@ module.exports = function(out, files) {
       var buf3 = crc32(fileBuffer);
       var buf4 = new Buffer(4);
       buf4.writeUInt32BE(fileBuffer.length, 0); // file length
-      var b = Buffer.concat([buf1, buf2, buf3, buf4]);
+      var b = Buffer.concat([buf1, buf2, nullByte, buf3, buf4]);
       combinedStream.append(streamifier.createReadStream(b));
       combinedStream.append(streamifier.createReadStream(fileBuffer));
       cb(null);

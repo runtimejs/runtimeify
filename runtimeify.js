@@ -45,6 +45,6 @@ var b = browserify(file);
 // ));
 
 var stream = b.bundle();
-var bundle = { stream: stream, name: '/system/bundle.js' };
+var bundle = { stream: stream, name: '/bundle.js' };
 var out = fs.createWriteStream(path.resolve(output));
 initrdPack(out, [bundle]);
