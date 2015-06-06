@@ -1,6 +1,6 @@
 {
   "name": "runtimeify",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Wrapper around browserify that bundles for runtime.js",
   "main": "index.js",
   "scripts": {
