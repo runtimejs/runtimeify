@@ -44,6 +44,14 @@ var b = browserify(file);
 //   }
 // ));
 
+b.transform(function () {
+  var tr = through();
+
+  tr.write('require(\'runtimejs\');\n')
+
+  return tr;
+});
+
 var stream = b.bundle();
 var bundle = { stream: stream, name: '/bundle.js' };
 var out = fs.createWriteStream(path.resolve(output));
