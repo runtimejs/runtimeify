@@ -16,6 +16,7 @@ var browserify = require('browserify');
 var initrdPack = require('./initrd-pack');
 var fs = require('fs');
 var path = require('path');
+var builtins = require('browserify/lib/builtins');
 
 module.exports = function (opts, cb) {
   var b = browserify(opts.file, opts);
@@ -37,3 +38,5 @@ module.exports = function (opts, cb) {
   out.once('finish', cb);
   out.once('error', cb);
 };
+
+module.exports.builtins = builtins;
