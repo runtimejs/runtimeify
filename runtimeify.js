@@ -18,10 +18,7 @@ require('colors');
 var shell = require('shelljs');
 var argv = require('minimist')(process.argv.slice(2));
 var path = require('path');
-var browserify = require('browserify');
 var through = require('through2');
-var initrdPack = require('./initrd-pack');
-var fs = require('fs');
 var bundlePath = path.resolve('./bundle.js');
 
 var arglist = argv._;
@@ -32,19 +29,12 @@ if (arglist.length === 0) {
 
 var output = argv.o || 'initrd';
 var file = path.resolve(arglist[arglist.length - 1]);
-var b = browserify(file);
 
-// TODO: include files separately
-// var rows = [];
-//
-// b.pipeline.get('deps').push(through.obj(
-//   function(row, enc, next) { rows.push(row); next() },
-//   function() {
-//     console.log(rows);
-//   }
-// ));
-
-var stream = b.bundle();
-var bundle = { stream: stream, name: '/bundle.js' };
-var out = fs.createWriteStream(path.resolve(output));
-initrdPack(out, [bundle]);
+require('./')({
+  file: file
+  output: output
+}, function (err) {
+  if (err) {
+    throw err;
+  }
+});
