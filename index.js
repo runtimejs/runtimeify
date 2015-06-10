@@ -17,9 +17,13 @@ var initrdPack = require('./initrd-pack');
 var fs = require('fs');
 var path = require('path');
 var builtins = require('browserify/lib/builtins');
+var sourceMapper = require('source-mapper');
 
 module.exports = function (opts, cb) {
-  var b = browserify(opts.file, opts);
+  var b = browserify(opts.file, {
+    builtins: opts.builtins,
+    debug: opts.debug
+  });
 
   // TODO: include files separately
   // var rows = [];
@@ -31,10 +35,34 @@ module.exports = function (opts, cb) {
   //   }
   // ));
 
+  b.require(require.resolve('source-map'));
+
   b.bundle(function (err, res) {
     if (err) {
       cb(err);
     } else {
+
+      if (opts.debug) {
+        var sourceMaps = new Buffer(
+          `var __MAP__ = ${JSON.stringify(sourceMapper.extract(res.toString()).map)};
+          var SourceMapConsumer = require('${require.resolve('source-map')}').SourceMapConsumer;
+          var smc = new SourceMapConsumer(__MAP__);
+          Error.prepareStackTrace = function (error) {
+            return error.stack.replace(/(^[ ])+:(\\d+):(\\d+)/g, function (match, file, p1, p2) {
+              var line = Number(p1);
+              var column = Number(p2);
+              var original = smc.originalPositionFor({
+                line: line,
+                column: column
+              });
+              return original.source + ':' + original.line + ':' + original.column;
+            });
+          }`
+        );
+
+        res = Buffer.concat([ res, sourceMaps]);
+      }
+
       var bundle = { buffer: res, name: '/bundle.js' };
       var out = fs.createWriteStream(path.resolve(opts.output));
       initrdPack(out, [bundle]);

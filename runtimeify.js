@@ -16,7 +16,9 @@
 
 require('colors');
 var shell = require('shelljs');
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2), {
+  boolean: 'debug'
+});
 var path = require('path');
 var through = require('through2');
 var bundlePath = path.resolve('./bundle.js');
@@ -32,7 +34,8 @@ var file = path.resolve(arglist[arglist.length - 1]);
 
 require('./')({
   file: file,
-  output: output
+  output: output,
+  debug: argv.debug
 }, function (err) {
   if (err) {
     throw err;

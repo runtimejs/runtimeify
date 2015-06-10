@@ -31,6 +31,8 @@
     "minimist": "^1.1.1",
     "request": "^2.55.0",
     "shelljs": "^0.4.0",
+    "source-map": "^0.4.2",
+    "source-mapper": "^1.0.3",
     "stream-to-buffer": "^0.1.0",
     "streamifier": "^0.1.1",
     "through2": "^0.6.5"
