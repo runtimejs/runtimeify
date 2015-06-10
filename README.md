@@ -6,7 +6,6 @@ Wrapper around browserify that bundles for runtime.js
 
 ```
 npm install -g runtimeify
-npm install runtimejs
 runtimeify index.js
 ```
 
