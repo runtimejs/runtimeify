@@ -31,12 +31,17 @@ module.exports = function (opts, cb) {
   //   }
   // ));
 
-  var stream = b.bundle();
-  var bundle = { stream: stream, name: '/bundle.js' };
-  var out = fs.createWriteStream(path.resolve(opts.output));
-  initrdPack(out, [bundle]);
-  out.once('finish', cb);
-  out.once('error', cb);
+  b.bundle(function (err, res) {
+    if (err) {
+      cb(err);
+    } else {
+      var bundle = { buffer: res, name: '/bundle.js' };
+      var out = fs.createWriteStream(path.resolve(opts.output));
+      initrdPack(out, [bundle]);
+      out.once('finish', cb);
+      out.once('error', cb);
+    }
+  });
 };
 
 module.exports.builtins = builtins;

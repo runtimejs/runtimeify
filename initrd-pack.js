@@ -33,31 +33,19 @@ module.exports = function(out, files) {
 
   combinedStream.append(streamifier.createReadStream(headerBuffer));
 
-  async.mapSeries(files, function(file, cb) {
-    streamToBuffer(file.stream, function(err, fileBuffer) {
-      if (err) {
-        return cb(err);
-      }
-
-      var buf1 = new Buffer(8);
-      var buf2 = new Buffer(file.name, 'utf8');
-      buf1.writeUInt32BE(0xAA, 0);        // type default
-      buf1.writeUInt32BE(buf2.length, 4); // name length
-      var buf3 = crc32(fileBuffer);
-      var buf4 = new Buffer(4);
-      buf4.writeUInt32BE(fileBuffer.length, 0); // file length
-      var b = Buffer.concat([buf1, buf2, nullByte, buf3, buf4]);
-      combinedStream.append(streamifier.createReadStream(b));
-      combinedStream.append(streamifier.createReadStream(fileBuffer));
-      cb(null);
-    });
-  }, function(err) {
-    if (err) {
-      console.log(err.message);
-      process.exit(1);
-      return;
-    }
-
-    combinedStream.pipe(out);
+  files.forEach(function(file) {
+    var fileBuffer = file.buffer;
+    var buf1 = new Buffer(8);
+    var buf2 = new Buffer(file.name, 'utf8');
+    buf1.writeUInt32BE(0xAA, 0);        // type default
+    buf1.writeUInt32BE(buf2.length, 4); // name length
+    var buf3 = crc32(fileBuffer);
+    var buf4 = new Buffer(4);
+    buf4.writeUInt32BE(fileBuffer.length, 0); // file length
+    var b = Buffer.concat([buf1, buf2, nullByte, buf3, buf4]);
+    combinedStream.append(streamifier.createReadStream(b));
+    combinedStream.append(streamifier.createReadStream(fileBuffer));
   });
+
+  combinedStream.pipe(out);
 };
