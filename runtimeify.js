@@ -31,7 +31,7 @@ var output = argv.o || 'initrd';
 var file = path.resolve(arglist[arglist.length - 1]);
 
 require('./')({
-  file: file
+  file: file,
   output: output
 }, function (err) {
   if (err) {
