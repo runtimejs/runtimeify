@@ -48,7 +48,7 @@ module.exports = function (opts, cb) {
           var SourceMapConsumer = require('${require.resolve('source-map')}').SourceMapConsumer;
           var smc = new SourceMapConsumer(__MAP__);
           Error.prepareStackTrace = function (error) {
-            return error.stack.replace(/(^[ ])+:(\\d+):(\\d+)/g, function (match, file, p1, p2) {
+            return error.stack.replace(/([a-z10-9\\.\\/]+):(\\d+):(\\d+)/g, function (match, file, p1, p2) {
               var line = Number(p1);
               var column = Number(p2);
               var original = smc.originalPositionFor({
