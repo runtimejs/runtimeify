@@ -28,6 +28,7 @@
     "buffer-crc32": "^0.2.5",
     "colors": "^1.1.0",
     "combined-stream": "0.0.7",
+    "format-text": "0.0.3",
     "minimist": "^1.1.1",
     "request": "^2.55.0",
     "shelljs": "^0.4.0",

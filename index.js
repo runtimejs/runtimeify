@@ -18,6 +18,8 @@ var fs = require('fs');
 var path = require('path');
 var builtins = require('browserify/lib/builtins');
 var sourceMapper = require('source-mapper');
+var format = require('format-text');
+var tmpl = fs.readFileSync(__dirname + '/source-maps.js', 'utf8');
 
 module.exports = function (opts, cb) {
   var b = browserify(opts.file, {
@@ -43,24 +45,15 @@ module.exports = function (opts, cb) {
     } else {
 
       if (opts.debug) {
-        var sourceMaps = new Buffer(
-          `var __MAP__ = ${JSON.stringify(sourceMapper.extract(res.toString()).map)};
-          var SourceMapConsumer = require('${require.resolve('source-map')}').SourceMapConsumer;
-          var smc = new SourceMapConsumer(__MAP__);
-          Error.prepareStackTrace = function (error) {
-            return error.stack.replace(/([a-z10-9\\.\\/]+):(\\d+):(\\d+)/g, function (match, file, p1, p2) {
-              var line = Number(p1);
-              var column = Number(p2);
-              var original = smc.originalPositionFor({
-                line: line,
-                column: column
-              });
-              return original.source + ':' + original.line + ':' + original.column;
-            });
-          }`
-        );
+        var map = JSON.stringify(sourceMapper.extract(res.toString()).map);
+        var sourceMapPath = require.resolve('source-map');
 
-        res = Buffer.concat([ res, sourceMaps]);
+        sourceMaps = format(tmpl, {
+          sourceMapPath: sourceMapPath,
+          map: map
+        });
+
+        res = Buffer.concat([ res, new Buffer(sourceMaps)]);
       }
 
       var bundle = { buffer: res, name: '/bundle.js' };
