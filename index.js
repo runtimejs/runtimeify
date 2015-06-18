@@ -36,6 +36,12 @@ module.exports = function (opts, cb) {
   // ));
 
   var stream = b.bundle();
+
+  if (opts.printjs) {
+    stream.pipe(process.stdout);
+    return;
+  }
+
   var bundle = { stream: stream, name: '/bundle.js' };
   var out = fs.createWriteStream(path.resolve(opts.output));
   initrdPack(out, [bundle]);
