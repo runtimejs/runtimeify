@@ -17,13 +17,19 @@ var initrdPack = require('./initrd-pack');
 var fs = require('fs');
 var path = require('path');
 var builtins = require('browserify/lib/builtins');
+var sourceMapper = require('source-mapper');
+var format = require('format-text');
+var tmpl = fs.readFileSync(__dirname + '/source-maps.js', 'utf8');
 
 builtins.dns = require.resolve('runtime-node-dns');
 builtins.net = require.resolve('runtime-node-net');
 builtins.http = require.resolve('http-node');
 
 module.exports = function (opts, cb) {
-  var b = browserify(opts.file, opts);
+  var b = browserify(opts.file, {
+    builtins: opts.builtins,
+    debug: opts.debug
+  });
 
   // TODO: include files separately
   // var rows = [];
@@ -35,12 +41,32 @@ module.exports = function (opts, cb) {
   //   }
   // ));
 
-  var stream = b.bundle();
-  var bundle = { stream: stream, name: '/bundle.js' };
-  var out = fs.createWriteStream(path.resolve(opts.output));
-  initrdPack(out, [bundle]);
-  out.once('finish', cb);
-  out.once('error', cb);
+  b.require(require.resolve('source-map'));
+
+  b.bundle(function (err, res) {
+    if (err) {
+      cb(err);
+    } else {
+
+      if (opts.debug) {
+        var map = JSON.stringify(sourceMapper.extract(res.toString()).map);
+        var sourceMapPath = require.resolve('source-map');
+
+        sourceMaps = format(tmpl, {
+          sourceMapPath: sourceMapPath,
+          map: map
+        });
+
+        res = Buffer.concat([ res, new Buffer(sourceMaps)]);
+      }
+
+      var bundle = { buffer: res, name: '/bundle.js' };
+      var out = fs.createWriteStream(path.resolve(opts.output));
+      initrdPack(out, [bundle]);
+      out.once('finish', cb);
+      out.once('error', cb);
+    }
+  });
 };
 
 module.exports.builtins = builtins;
