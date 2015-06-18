@@ -16,3 +16,7 @@ var runtime = require('runtimejs');
 var foo = require('./foo');
 console.log(foo(2));
 
+// Test builtins:
+var dns = require('dns');
+var net = require('net');
+var http = require('http');

@@ -20,7 +20,8 @@
   },
   "homepage": "http://runtimejs.org",
   "devDependencies": {
-    "tape": "^4.0.0"
+    "tape": "^4.0.0",
+    "runtimejs": "*"
   },
   "dependencies": {
     "async": "^0.9.0",
@@ -33,6 +34,9 @@
     "shelljs": "^0.4.0",
     "stream-to-buffer": "^0.1.0",
     "streamifier": "^0.1.1",
-    "through2": "^0.6.5"
+    "through2": "^0.6.5",
+    "runtime-node-net": "^0.1.0",
+    "runtime-node-dns": "^1.1.1",
+    "http-node": "^0.0.1"
   }
 }
