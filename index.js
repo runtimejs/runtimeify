@@ -18,6 +18,9 @@ var fs = require('fs');
 var path = require('path');
 var builtins = require('browserify/lib/builtins');
 
+builtins.http = require.resolve('http-node');
+builtins.net = require.resolve('runtime-node-net');
+
 module.exports = function (opts, cb) {
   var b = browserify(opts.file, opts);
 
