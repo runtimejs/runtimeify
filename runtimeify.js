@@ -16,7 +16,9 @@
 
 require('colors');
 var shell = require('shelljs');
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2), {
+  boolean: ['print-js']
+});
 var path = require('path');
 var through = require('through2');
 var bundlePath = path.resolve('./bundle.js');
@@ -28,10 +30,12 @@ if (arglist.length === 0) {
 }
 
 var output = argv.o || 'initrd';
+var printjs = !!argv['print-js'];
 var file = path.resolve(arglist[arglist.length - 1]);
 
 require('./')({
   file: file,
+  printjs: printjs,
   output: output
 }, function (err) {
   if (err) {
